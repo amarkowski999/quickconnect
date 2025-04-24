@@ -1,0 +1,74 @@
+#!/bin/bash
+#It is recommended that you insert different IPs for whatever Wi-Fi networks
+#your phone regularly connects to (for example, home and school or work).
+#More can be added as required.
+IP_1="Insert IP of phone on network here:5555"
+IP_2="Insert IP of phone on network here:5555"
+#Flags for configured IPs
+case "$1" in
+  --IP1)
+    TARGET_IP=$IP_1
+    ;;
+  --IP2)
+    TARGET_IP=$IP_2
+    ;;
+  *)
+    echo "Insert usage here"
+    #To put phone in TCPIP, connect to computer via USB cable and run 'adb tcpip 5555'
+    #This will reset whenever your phone is rebooted
+    echo "Phone must be in ADB TCPIP mode and locked"
+    exit 1
+    ;;
+esac
+#Password protection (3 attempts by default, configurable)
+correct_pass="Insert a correct password here"
+attempts=0
+max_attempts=3
+while [[ $attempts -lt $max_attempts ]]; do
+    read -sp "password: " pass
+    echo
+    if [[ "$pass" == "$correct_pass" ]]; then
+        break
+    else
+        ((attempts++))
+        echo "Sorry, try again."
+    fi
+done
+
+if [[ $attempts -eq $max_attempts ]]; then
+    echo "3 incorrect password attempts"
+    exit 1
+fi
+#Connect to phone
+adb connect "$TARGET_IP"
+#As scrcpy cannot typically interact with the lock screen
+#(leaving you required to unlock it before starting scrcpy),
+#ADB is used in this script to input all strokes required to
+#typically unlock the phone. Amount of digits for PIN can be changed as needed.
+#To get coordinate information, enable pointer location in developer options.
+#Wake up phone screen
+adb shell input keyevent KEYCODE_WAKEUP
+sleep 0.2
+#Swipe up
+adb shell input swipe #Put X and Y coordinates of where you want swipe to start and end
+sleep 0.2
+#Enter pin
+adb shell input tap #Put X and Y coordinates of keypad digit here
+sleep 0.01
+adb shell input tap #Put X and Y coordinates of keypad digit here
+sleep 0.01
+adb shell input tap #Put X and Y coordinates of keypad digit here
+sleep 0.01
+adb shell input tap #Put X and Y coordinates of keypad digit here
+sleep 0.01
+adb shell input tap #Put X and Y coordinates of keypad digit here
+sleep 0.01
+adb shell input tap #Put X and Y coordinates of keypad digit here
+sleep 0.01
+#Since scrcpy also doesn't normally prevent the phone from re-locking, the screen
+#timeout needs to be set manually. The default here is 24 hours.
+adb shell settings put system screen_off_timeout 86400000
+#Start scrcpy and turn phone screen off (remove --turn-screen-off flag if not wanted)
+scrcpy --turn-screen-off
+#Reset timeout to 30s default when scrcpy stops (in milliseconds)
+adb shell settings put system screen_off_timeout 30000
