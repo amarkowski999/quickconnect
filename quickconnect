@@ -13,7 +13,7 @@ case "$1" in
     TARGET_IP=$IP_2
     ;;
   *)
-    echo "Insert usage here"
+    echo "Insert usage message here"
     #To put phone in TCPIP, connect to computer via USB cable and run 'adb tcpip 5555'
     #This will reset whenever your phone is rebooted
     echo "Phone must be in ADB TCPIP mode and locked"
@@ -72,3 +72,5 @@ adb shell settings put system screen_off_timeout 86400000
 scrcpy --turn-screen-off
 #Reset timeout to 30s default when scrcpy stops (in milliseconds)
 adb shell settings put system screen_off_timeout 30000
+#Turn off the phone
+adb shell input keyevent KEYCODE_POWER
