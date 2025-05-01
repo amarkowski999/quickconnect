@@ -6,5 +6,3 @@ quickconnect is a highly configurable Bash shell script for scrcpy that includes
 3. chmod +x
 4. Optionally add to PATH
 5. Configure (must be configured before running)
-
-Don't run while unlocked post-configuration unless you want random things being pressed.
