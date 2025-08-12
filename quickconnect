@@ -41,9 +41,6 @@ if [[ $attempts -eq $max_attempts ]]; then
 fi
 #Connect to phone
 adb connect "$TARGET_IP"
-#Lock the phone (to prevent automatic PIN entry from pressing randomly everywhere)
-adb shell input keyevent KEYCODE_POWER
-sleep 0.3
 #As scrcpy cannot typically interact with the lock screen
 #(leaving you required to unlock it before starting scrcpy),
 #ADB is used in this script to input all strokes required to
@@ -75,3 +72,5 @@ adb shell settings put system screen_off_timeout 86400000
 scrcpy --turn-screen-off
 #Reset timeout to 30s default when scrcpy stops (in milliseconds)
 adb shell settings put system screen_off_timeout 30000
+#Lock the phone again once finished
+adb shell input keyevent KEYCODE_SLEEP
