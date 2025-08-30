@@ -16,7 +16,7 @@ case "$1" in
     echo "Insert usage message here"
     #To put phone in TCPIP, connect to computer via USB cable and run 'adb tcpip 5555'
     #This will reset whenever your phone is rebooted
-    echo "Phone must be in ADB TCPIP mode"
+    echo "Phone must be locked and in ADB TCPIP mode"
     exit 1
     ;;
 esac
